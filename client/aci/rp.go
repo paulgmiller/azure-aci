@@ -13,7 +13,7 @@ import (
 
 const (
 	resourceProviderURLPath    = "providers/Microsoft.ContainerInstance"
-	resourceProviderAPIVersion = "2018-02-01"
+	resourceProviderAPIVersion = "2021-09-01"
 )
 
 // GetResourceProviderMetadata gets the ACI resource provider metadata

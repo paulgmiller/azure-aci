@@ -5,19 +5,21 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+
+	"github.com/Azure/azure-sdk-for-go/services/containerinstance/mgmt/2021-09-01/containerinstance"
 )
 
 // NewContainerGroupDiagnostics creates a container group diagnostics object
-func NewContainerGroupDiagnostics(logAnalyticsID, logAnalyticsKey string) (*ContainerGroupDiagnostics, error) {
+func NewContainerGroupDiagnostics(logAnalyticsID, logAnalyticsKey string) (*containerinstance.ContainerGroupDiagnostics, error) {
 
 	if logAnalyticsID == "" || logAnalyticsKey == "" {
 		return nil, errors.New("Log Analytics configuration requires both the workspace ID and Key")
 	}
 
-	return &ContainerGroupDiagnostics{
-		LogAnalytics: &LogAnalyticsWorkspace{
-			WorkspaceID:  logAnalyticsID,
-			WorkspaceKey: logAnalyticsKey,
+	return &containerinstance.ContainerGroupDiagnostics{
+		LogAnalytics: &containerinstance.LogAnalytics{
+			WorkspaceID:  &logAnalyticsID,
+			WorkspaceKey: &logAnalyticsKey,
 		},
 	}, nil
 }

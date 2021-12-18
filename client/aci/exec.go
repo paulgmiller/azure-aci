@@ -17,7 +17,6 @@ type TerminalSizeRequest struct {
 	Height int
 }
 
-// LaunchExec starts the exec command for a specified container instance in a specified resource group and container group.
 // From: https://docs.microsoft.com/en-us/rest/api/container-instances/startcontainer/launchexec
 func (c *Client) LaunchExec(resourceGroup, containerGroupName, containerName, command string, terminalSize TerminalSizeRequest) (ExecResponse, error) {
 	urlParams := url.Values{

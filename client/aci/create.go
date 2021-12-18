@@ -9,13 +9,14 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/Azure/azure-sdk-for-go/services/containerinstance/mgmt/2021-09-01/containerinstance"
 	"github.com/virtual-kubelet/azure-aci/client/api"
 )
 
 // CreateContainerGroup creates a new Azure Container Instance with the
 // provided properties.
 // From: https://docs.microsoft.com/en-us/rest/api/container-instances/containergroups/createorupdate
-func (c *Client) CreateContainerGroup(ctx context.Context, resourceGroup, containerGroupName string, containerGroup ContainerGroup) (*ContainerGroup, error) {
+func (c *Client) CreateContainerGroup(ctx context.Context, resourceGroup, containerGroupName string, containerGroup containerinstance.ContainerGroup) (*containerinstance.ContainerGroup, error) {
 	urlParams := url.Values{
 		"api-version": []string{apiVersion},
 	}
@@ -62,7 +63,7 @@ func (c *Client) CreateContainerGroup(ctx context.Context, resourceGroup, contai
 	if resp.Body == nil {
 		return nil, errors.New("Create container group returned an empty body in the response")
 	}
-	var cg ContainerGroup
+	var cg containerinstance.ContainerGroup
 	if err := json.NewDecoder(resp.Body).Decode(&cg); err != nil {
 		return nil, fmt.Errorf("Decoding create container group response body failed: %v", err)
 	}

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/Azure/azure-sdk-for-go/profiles/latest/containerinstance/mgmt/containerinstance"
 	"github.com/virtual-kubelet/azure-aci/client/api"
 )
 
@@ -17,7 +18,7 @@ import (
 // if it is not empty.
 // From: https://docs.microsoft.com/en-us/rest/api/container-instances/containergroups/list
 // From: https://docs.microsoft.com/en-us/rest/api/container-instances/containergroups/listbyresourcegroup
-func (c *Client) ListContainerGroups(ctx context.Context, resourceGroup string) (*ContainerGroupListResult, error) {
+func (c *Client) ListContainerGroups(ctx context.Context, resourceGroup string) (*containerinstance.ContainerGroupListResult, error) {
 	urlParams := url.Values{
 		"api-version": []string{apiVersion},
 	}
@@ -62,7 +63,7 @@ func (c *Client) ListContainerGroups(ctx context.Context, resourceGroup string) 
 	if resp.Body == nil {
 		return nil, errors.New("Create container group list returned an empty body in the response")
 	}
-	var list ContainerGroupListResult
+	var list containerinstance.ContainerGroupListResult
 	if err := json.NewDecoder(resp.Body).Decode(&list); err != nil {
 		return nil, fmt.Errorf("Decoding get container group response body failed: %v", err)
 	}

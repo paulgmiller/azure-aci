@@ -8,13 +8,14 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/Azure/azure-sdk-for-go/profiles/latest/containerinstance/mgmt/containerinstance"
 	"github.com/virtual-kubelet/azure-aci/client/api"
 )
 
 // GetContainerLogs returns the logs from an Azure Container Instance
 // in the provided resource group with the given container group name.
 // From: https://docs.microsoft.com/en-us/rest/api/container-instances/containers/listlogs
-func (c *Client) GetContainerLogs(ctx context.Context, resourceGroup, containerGroupName, containerName string, tail int) (*Logs, error) {
+func (c *Client) GetContainerLogs(ctx context.Context, resourceGroup, containerGroupName, containerName string, tail int) (*containerinstance.Logs, error) {
 	urlParams := url.Values{
 		"api-version": []string{apiVersion},
 	}
@@ -60,7 +61,7 @@ func (c *Client) GetContainerLogs(ctx context.Context, resourceGroup, containerG
 	if resp.Body == nil {
 		return nil, errors.New("Create container logs returned an empty body in the response")
 	}
-	var logs Logs
+	var logs containerinstance.Logs
 	if err := json.NewDecoder(resp.Body).Decode(&logs); err != nil {
 		return nil, fmt.Errorf("Decoding get container logs response body failed: %v", err)
 	}
