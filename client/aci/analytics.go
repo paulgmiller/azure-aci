@@ -25,19 +25,19 @@ func NewContainerGroupDiagnostics(logAnalyticsID, logAnalyticsKey string) (*cont
 }
 
 // NewContainerGroupDiagnosticsFromFile creates a container group diagnostics object from the specified file
-func NewContainerGroupDiagnosticsFromFile(filepath string) (*ContainerGroupDiagnostics, error) {
+func NewContainerGroupDiagnosticsFromFile(filepath string) (*containerinstance.ContainerGroupDiagnostics, error) {
 
 	analyticsdata, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		return nil, fmt.Errorf("Reading Log Analytics Auth file %q failed: %v", filepath, err)
 	}
 	// Unmarshal the log analytics file.
-	var law LogAnalyticsWorkspace
+	var law containerinstance.LogAnalytics
 	if err := json.Unmarshal(analyticsdata, &law); err != nil {
 		return nil, err
 	}
 
-	return &ContainerGroupDiagnostics{
+	return &containerinstance.ContainerGroupDiagnostics{
 		LogAnalytics: &law,
 	}, nil
 }

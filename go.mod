@@ -27,6 +27,7 @@ require (
 	github.com/virtual-kubelet/node-cli v0.7.0
 	github.com/virtual-kubelet/virtual-kubelet v1.6.0
 	go.opencensus.io v0.22.2
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	gotest.tools v2.2.0+incompatible
 	k8s.io/api v0.19.10

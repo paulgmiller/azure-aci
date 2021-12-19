@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Azure/azure-sdk-for-go/services/containerinstance/mgmt/2021-09-01/containerinstance"
 	"github.com/patrickmn/go-cache"
 	"github.com/pkg/errors"
 	"github.com/virtual-kubelet/azure-aci/client/aci"
@@ -33,7 +34,7 @@ type MetricsGetter interface {
 
 // package dependency: query the Container Group information
 type ContainerGroupGetter interface {
-	GetContainerGroup(ctx context.Context, resourceGroup, containerGroupName string) (*aci.ContainerGroup, *int, error)
+	GetContainerGroup(ctx context.Context, resourceGroup, containerGroupName string) (*containerinstance.ContainerGroup, *int, error)
 }
 
 /*
@@ -174,11 +175,15 @@ func (decider *podStatsGetterDecider) getPodStats(ctx context.Context, pod *v1.P
 		"Name":      pod.Name,
 		"Namespace": pod.Namespace,
 	})
+	logger.Infof("use Container Insights metrics for pod '%s'", pod.Name)
+	return decider.containerInsightsGetter.getPodStats(ctx, pod)
+	/* Extensions no longer supported?
 	aciCG, err := decider.getContainerGroup(ctx, pod)
 	if err != nil {
 		logger.Errorf("faile to query Container Group %s", err)
 		return nil, errors.Wrapf(err, "failed to query Container Group")
 	}
+
 	useRealTime := false
 	for _, extension := range aciCG.Extensions {
 		if extension.Properties.Type == aci.ExtensionTypeRealtimeMetrics {
@@ -189,17 +194,19 @@ func (decider *podStatsGetterDecider) getPodStats(ctx context.Context, pod *v1.P
 		logger.Infof("use Real-Time Metrics Extension for pod '%s'", pod.Name)
 		return decider.realTimeGetter.getPodStats(ctx, pod)
 	} else {
+
 		logger.Infof("use Container Insights metrics for pod '%s'", pod.Name)
 		return decider.containerInsightsGetter.getPodStats(ctx, pod)
 	}
+	*/
 }
 
-func (decider *podStatsGetterDecider) getContainerGroup(ctx context.Context, pod *v1.Pod) (*aci.ContainerGroup, error) {
+func (decider *podStatsGetterDecider) getContainerGroup(ctx context.Context, pod *v1.Pod) (*containerinstance.ContainerGroup, error) {
 	cgName := containerGroupName(pod.Namespace, pod.Name)
 	cacheKey := string(pod.UID)
 	aciContainerGroup, found := decider.cache.Get(cacheKey)
 	if found {
-		return aciContainerGroup.(*aci.ContainerGroup), nil
+		return aciContainerGroup.(*containerinstance.ContainerGroup), nil
 	}
 	aciCG, httpStatus, err := decider.aciCGGetter.GetContainerGroup(ctx, decider.rgName, cgName)
 	if err != nil {

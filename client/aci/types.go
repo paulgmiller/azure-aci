@@ -3,6 +3,7 @@ package aci
 import (
 	"time"
 
+	"github.com/Azure/azure-sdk-for-go/services/containerinstance/mgmt/2021-09-01/containerinstance"
 	"github.com/virtual-kubelet/azure-aci/client/api"
 )
 
@@ -505,8 +506,8 @@ const (
 
 // GPURegionalSKU is the ACI GPU regional SKU
 type GPURegionalSKU struct {
-	Location string   `json:"location"`
-	SKUs     []GPUSKU `json:"skus"`
+	Location string                     `json:"location"`
+	SKUs     []containerinstance.GpuSku `json:"skus"`
 }
 
 // ResourceProviderMetadata is the ACI resource provider metadata
